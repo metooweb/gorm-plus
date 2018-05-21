@@ -83,6 +83,18 @@ func (t *DB) Rollback() {
 	return
 }
 
+func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist bool, err error) {
+
+	if err = db.Take(out, where...).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return false, nil
+		}
+		return
+	}
+
+	return
+}
+
 func NewDB(db *gorm.DB) *DB {
 
 	return &DB{db: db}
