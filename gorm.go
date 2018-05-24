@@ -92,6 +92,8 @@ func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist boo
 		return
 	}
 
+	exist = true
+
 	return
 }
 
