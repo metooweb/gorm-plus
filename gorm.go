@@ -97,6 +97,53 @@ func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist boo
 	return
 }
 
+func (t *DB) FindAndCount(db *gorm.DB, out interface{}, page int, limit int) (total int64, err error) {
+
+	if err = db.Count(&total).Error; err != nil {
+		return
+	}
+
+	if err = db.Limit(limit).Offset((page - 1) * limit).Find(out).Error; err != nil {
+		return
+	}
+
+	return
+}
+
+func (t *DB) Exist(db *gorm.DB) (res bool, err error) {
+
+	dest := &struct {
+	}{}
+
+	res, err = t.Take(db, dest)
+
+	return
+}
+
+func (t *DB) Get(dst interface{}, sql string, args ...interface{}) (exist bool) {
+
+	var err error
+
+	if err = t.Inst().Raw(sql, args...).Scan(dst).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return false
+		}
+		panic(err)
+		return
+	}
+
+	exist = true
+
+	return
+}
+
+func (t *DB) Exec(sql string, args ...interface{}) {
+	var err error
+	if err = t.Inst().Exec(sql, args...).Error; err != nil {
+		panic(err)
+	}
+}
+
 func NewDB(db *gorm.DB) *DB {
 
 	return &DB{db: db}
