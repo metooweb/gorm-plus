@@ -147,7 +147,7 @@ func (t *DB) Exec(sql string, args ...interface{}) {
 
 func (t *DB) Create(data interface{}) {
 
-	if err = t.Inst().Create(data).Error; err != nil {
+	if err := t.Inst().Create(data).Error; err != nil {
 		panic(err)
 	}
 
