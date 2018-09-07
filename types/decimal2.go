@@ -13,7 +13,7 @@ func (n *Decimal2) Scan(value interface{}) (err error) {
 	if value == nil {
 		return
 	}
-
+	
 	var valStr string
 	switch value.(type) {
 	case []byte:

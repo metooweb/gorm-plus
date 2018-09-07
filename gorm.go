@@ -89,6 +89,7 @@ func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist boo
 		if gorm.IsRecordNotFoundError(err) {
 			return false, nil
 		}
+		panic(err)
 		return
 	}
 
@@ -142,6 +143,14 @@ func (t *DB) Exec(sql string, args ...interface{}) {
 	if err = t.Inst().Exec(sql, args...).Error; err != nil {
 		panic(err)
 	}
+}
+
+func (t *DB) Create(data interface{}) {
+
+	if err = t.Inst().Create(data).Error; err != nil {
+		panic(err)
+	}
+
 }
 
 func NewDB(db *gorm.DB) *DB {
