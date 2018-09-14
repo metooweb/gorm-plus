@@ -98,6 +98,14 @@ func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist boo
 	return
 }
 
+func (t *DB) List(db *gorm.DB, out interface{}, where ...interface{}) {
+
+	if err := db.Find(out, where...).Error; err != nil {
+		panic(err)
+	}
+
+}
+
 func (t *DB) FindAndCount(db *gorm.DB, out interface{}, page int, limit int) (total int64, err error) {
 
 	if err = db.Count(&total).Error; err != nil {
@@ -148,6 +156,14 @@ func (t *DB) Exec(sql string, args ...interface{}) {
 func (t *DB) Create(data interface{}) {
 
 	if err := t.Inst().Create(data).Error; err != nil {
+		panic(err)
+	}
+
+}
+
+func (t *DB) Update(db *gorm.DB, attrs ...interface{}) {
+
+	if err := db.Update(attrs).Error; err != nil {
 		panic(err)
 	}
 
