@@ -83,11 +83,13 @@ func (t *DB) Rollback() {
 	return
 }
 
-func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist bool, err error) {
+func (t *DB) Take(db *gorm.DB, out interface{}, where ...interface{}) (exist bool) {
+
+	var err error
 
 	if err = db.Take(out, where...).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			return false, nil
+			return false
 		}
 		panic(err)
 		return
@@ -119,12 +121,12 @@ func (t *DB) FindAndCount(db *gorm.DB, out interface{}, page int, limit int) (to
 	return
 }
 
-func (t *DB) Exist(db *gorm.DB) (res bool, err error) {
+func (t *DB) Exist(db *gorm.DB) (res bool) {
 
 	dest := &struct {
 	}{}
 
-	res, err = t.Take(db, dest)
+	res = t.Take(db, dest)
 
 	return
 }
@@ -164,6 +166,14 @@ func (t *DB) Create(data interface{}) {
 func (t *DB) Update(db *gorm.DB, attrs ...interface{}) {
 
 	if err := db.Update(attrs).Error; err != nil {
+		panic(err)
+	}
+
+}
+
+func (t *DB) Save(val interface{}) {
+
+	if err := t.Inst().Save(val).Error; err != nil {
 		panic(err)
 	}
 
